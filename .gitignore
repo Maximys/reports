@@ -231,3 +231,8 @@ Thumbs.db
 
 # Log folders
 [Ll]ogs/
+
+# Downloaded SQL Server installer
+SQL2019-SSEI-Dev.exe
+SQLServer2019-DEV-x64-ENU.box
+SQLServer2019-DEV-x64-ENU.exe

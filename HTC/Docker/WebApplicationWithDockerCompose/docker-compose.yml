@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  sqlservercontainer:
+    image: sqldeveloper
+
+  webapplicationwithdockercompose:
+    image: ${DOCKER_REGISTRY-}webapplicationwithdockercompose
+    build:
+      context: .
+      dockerfile: WebApplicationWithDockerCompose\Dockerfile
+    depends_on:
+      - sqlservercontainer
