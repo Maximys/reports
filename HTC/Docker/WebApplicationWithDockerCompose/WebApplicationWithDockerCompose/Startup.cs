@@ -1,16 +1,14 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Data.Database;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Data.Database.Entities;
+using Services.Services;
 
 namespace WebApplicationWithDockerCompose
 {
@@ -26,6 +24,10 @@ namespace WebApplicationWithDockerCompose
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ApplicationContextConnection")));
+
+            services.AddScoped<UserService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -44,6 +46,8 @@ namespace WebApplicationWithDockerCompose
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApplicationWithDockerCompose v1"));
             }
 
+            ConfigureDatabase(app);
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -54,6 +58,31 @@ namespace WebApplicationWithDockerCompose
             {
                 endpoints.MapControllers();
             });
+        }
+
+        protected void ConfigureDatabase(IApplicationBuilder app)
+        {
+            using (IServiceScope scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+                dbContext.Database.Migrate();
+                SeedUsers(dbContext);
+            }
+        }
+
+        protected void SeedUsers(ApplicationContext dbContext)
+        {
+            if (!dbContext.Users.Any())
+            {
+                var user = new User
+                {
+                    Name = "Name1",
+                    Age = 11
+                };
+
+                dbContext.Users.Add(user);
+                dbContext.SaveChanges();
+            }
         }
     }
 }
