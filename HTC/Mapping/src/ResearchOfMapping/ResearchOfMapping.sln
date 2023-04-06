@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleWebAPI.Domain", "Simp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleWebAPI.Infrastructure", "SimpleWebAPI.Infrastructure\SimpleWebAPI.Infrastructure.csproj", "{D6901824-BB3B-48E8-8553-F52ABF55E79F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarking", "Benchmarking", "{CF836594-9CE4-4E40-B961-F03C5E092783}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarking", "Benchmarking\Benchmarking.csproj", "{5AED5AE9-15B4-487E-82A4-D716336AF232}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,10 @@ Global
 		{D6901824-BB3B-48E8-8553-F52ABF55E79F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6901824-BB3B-48E8-8553-F52ABF55E79F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6901824-BB3B-48E8-8553-F52ABF55E79F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AED5AE9-15B4-487E-82A4-D716336AF232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AED5AE9-15B4-487E-82A4-D716336AF232}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AED5AE9-15B4-487E-82A4-D716336AF232}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AED5AE9-15B4-487E-82A4-D716336AF232}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +52,7 @@ Global
 		{7DE17139-3474-467B-A392-10E8CB0C0386} = {6884C16C-B8E8-4EDD-80D2-DDC4F060EECB}
 		{DDA74339-EB7E-4D9E-AEAB-00147442EDC4} = {6884C16C-B8E8-4EDD-80D2-DDC4F060EECB}
 		{D6901824-BB3B-48E8-8553-F52ABF55E79F} = {6884C16C-B8E8-4EDD-80D2-DDC4F060EECB}
+		{5AED5AE9-15B4-487E-82A4-D716336AF232} = {CF836594-9CE4-4E40-B961-F03C5E092783}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {844C4874-5425-4F87-BE88-C5452BE09A97}
