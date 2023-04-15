@@ -3,6 +3,7 @@ using AutoMapper;
 using BenchmarkDotNet.Attributes;
 using Benchmarking.Entities.Destination;
 using Benchmarking.Entities.Source;
+using Benchmarking.MapperlyEnvironments;
 using Mapster;
 
 namespace Benchmarking.BenchmarkEnvironments
@@ -37,5 +38,8 @@ namespace Benchmarking.BenchmarkEnvironments
 
         [Benchmark]
         public List<FooDest> Mapster() => data.Adapt<IEnumerable<FooDest>>().ToList();
+
+        [Benchmark]
+        public List<FooDest> Mapperly() => FooMapper.MapFooToDest(data).ToList();
     }
 }
