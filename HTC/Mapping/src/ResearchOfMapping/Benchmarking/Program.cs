@@ -7,7 +7,7 @@ namespace Benchmarking
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<Benchmark>();
+            BenchmarkRunner.Run<BenchmarkWithInMemoryData>();
 
             Console.WriteLine("Benchmarking finished. Press any key for close application");
             Console.ReadKey();
