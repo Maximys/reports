@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  redis:
+    image: redis
+
+  redisfordummies.api:
+    image: ${DOCKER_REGISTRY-}redisfordummiesapi
+    build:
+      context: .
+      dockerfile: RedisForDummies.Api/Dockerfile

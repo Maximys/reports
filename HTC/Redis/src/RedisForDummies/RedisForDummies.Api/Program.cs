@@ -1,3 +1,5 @@
+using RedisForDummies.Api.Extensions;
+
 namespace RedisForDummies.Api
 {
     public class Program
@@ -8,6 +10,7 @@ namespace RedisForDummies.Api
 
             // Add services to the container.
 
+            builder.Services.AddServices(builder.Configuration);
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
