@@ -1,0 +1,31 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "redisfordummies.api": "StartDebugging",
+        "redis_instance": "StartWithoutDebugging"
+      }
+    },
+    "Start Redis": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "redis_instance": "StartWithoutDebugging",
+        "redisfordummies.api": "DoNotStart"
+      }
+    },
+    "Start My Services": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "redisfordummies.api",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "serviceActions": {
+        "redis_instance": "DoNotStart",
+        "redisfordummies.api": "StartDebugging"
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  redis_instance:
+    image: redis
+
+  redisfordummies.api:
+    image: ${DOCKER_REGISTRY-}redisfordummiesapi
+    build:
+      context: .
+      dockerfile: RedisForDummies.Api/Dockerfile
+    depends_on:
+        - redis_instance
