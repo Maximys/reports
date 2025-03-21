@@ -2,11 +2,10 @@ version: '3.4'
 
 services:
   ignite_instance:
-    image: apacheignite/ignite
+    image: apacheignite/ignite:3.0.0
     ports:
+      - "10300:10300"
       - "10800:10800"
-      - "47100:47100"
-      - "47101:47101"
 
   redis_instance:
     image: redis
