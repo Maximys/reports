@@ -1,6 +1,13 @@
 version: '3.4'
 
 services:
+  ignite_instance:
+    image: apacheignite/ignite
+    ports:
+      - "10800:10800"
+      - "47100:47100"
+      - "47101:47101"
+
   redis_instance:
     image: redis
 
@@ -10,4 +17,5 @@ services:
       context: .
       dockerfile: RedisForDummies.Api/Dockerfile
     depends_on:
-        - redis_instance
+      - ignite_instance
+      - redis_instance

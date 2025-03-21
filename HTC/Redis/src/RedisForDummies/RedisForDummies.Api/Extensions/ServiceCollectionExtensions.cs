@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Caching.StackExchangeRedis;
+﻿using Apache.Extensions.Caching.Ignite;
+using Apache.Ignite;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using RedisForDummies.Api.Settings;
 using RedisForDummies.Application.Providers.Counters;
 using RedisForDummies.Infrastructure.Providers.Counters;
@@ -19,7 +21,8 @@ namespace RedisForDummies.Api.Extensions
         {
             services
                 .AddApplicationServices()
-                .AddRedis(configuration);
+                .AddApacheIgnite(configuration)
+                /*.AddRedis(configuration)*/;
 
             return services;
         }
@@ -31,6 +34,27 @@ namespace RedisForDummies.Api.Extensions
         private static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddTransient<ICounterService, CounterService>();
+
+            return services;
+        }
+
+        /// <summary>
+        /// Добавить Apache Ignite.
+        /// </summary>
+        /// <param name="services">Коллекция сервисов.</param>
+        /// <param name="configuration">Конфигурация <see cref="IConfiguration"/>.</param>
+        private static IServiceCollection AddApacheIgnite(this IServiceCollection services, IConfiguration configuration)
+        {
+            ApacheIgniteSettings apacheIgniteSettings;
+
+            apacheIgniteSettings = configuration.GetRequiredSection(nameof(ApacheIgniteSettings))
+                .Get<ApacheIgniteSettings>()!;
+
+            services.AddIgniteClientGroup(new IgniteClientGroupConfiguration
+            {
+                ClientConfiguration = new IgniteClientConfiguration(apacheIgniteSettings.Endpoints)
+            })
+            .AddIgniteDistributedCache(options => options.CacheKeyPrefix = "prefix");
 
             return services;
         }
