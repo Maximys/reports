@@ -1,7 +1,10 @@
-﻿using Apache.Extensions.Caching.Ignite;
+﻿using System.Net.Mime;
+using System.Text;
+using Apache.Extensions.Caching.Ignite;
 using Apache.Ignite;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using RedisForDummies.Api.Settings;
+using RedisForDummies.Api.Settings.ApacheIgnite;
 using RedisForDummies.Application.Providers.Counters;
 using RedisForDummies.Infrastructure.Providers.Counters;
 
@@ -56,6 +59,8 @@ namespace RedisForDummies.Api.Extensions
             })
             .AddIgniteDistributedCache(options => options.CacheKeyPrefix = "prefix");
 
+            InitApacheIgniteCluster(apacheIgniteSettings);
+
             return services;
         }
 
@@ -85,6 +90,29 @@ namespace RedisForDummies.Api.Extensions
 
             options.Configuration = redisSettings.Configuration;
             options.InstanceName = redisSettings.InstanceName;
+        }
+
+        /// <summary>
+        /// Инициализировать кластер Apache Ignite.
+        /// </summary>
+        /// <param name="apacheIgniteSettings">Настройки для работы с Apache Ignite.</param>
+        private static void InitApacheIgniteCluster(ApacheIgniteSettings apacheIgniteSettings)
+        {
+            using (HttpClient apacheIgniteClient = new HttpClient())
+            {
+                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Post, apacheIgniteSettings.Initialization.InitializationUri)
+                {
+                    Content = new StringContent(apacheIgniteSettings.Initialization.Body, Encoding.UTF8, MediaTypeNames.Application.Json)
+                };
+
+                using (HttpResponseMessage webResponse = apacheIgniteClient.Send(webRequest))
+                {
+                    if (!webResponse.IsSuccessStatusCode)
+                    {
+                        throw new InvalidOperationException("Не удалось инициализировать Apache Ignite");
+                    }
+                }
+            }
         }
     }
 }
