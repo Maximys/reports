@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Apache.Extensions.Caching.Ignite" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>

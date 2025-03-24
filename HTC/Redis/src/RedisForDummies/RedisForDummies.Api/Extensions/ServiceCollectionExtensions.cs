@@ -18,7 +18,7 @@ namespace RedisForDummies.Api.Extensions
             services
                 .AddApplicationServices()
                 .AddApacheIgnite(configuration)
-                /*.AddRedis(configuration)*/;
+                .AddRedis(configuration);
 
             return services;
         }

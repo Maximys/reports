@@ -3,6 +3,8 @@ using System.Text;
 using Apache.Extensions.Caching.Ignite;
 using Apache.Ignite;
 using RedisForDummies.Api.Settings.ApacheIgnite;
+using RedisForDummies.Application.Caches.ApacheIgnite;
+using RedisForDummies.Infrastructure.Caches.ApacheIgnite;
 
 namespace RedisForDummies.Api.Extensions
 {
@@ -27,9 +29,29 @@ namespace RedisForDummies.Api.Extensions
             {
                 ClientConfiguration = new IgniteClientConfiguration(apacheIgniteSettings.Endpoints)
             })
-            .AddIgniteDistributedCache(options => options.CacheKeyPrefix = "prefix");
+            .AddApacheIgniteCache(options => options.CacheKeyPrefix = "prefix");
 
             InitApacheIgniteCluster(apacheIgniteSettings);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Добавить Кэш, предоставляемый Apache Ignite'ом.
+        /// </summary>
+        /// <param name="services">Коллекция сервисов.</param>
+        /// <param name="setupAction">Действие для настройки Кэша.</param>
+        /// <returns>Коллекция сервисов с добавленным кэшем Apache Ignite'а.</returns>
+        private static IServiceCollection AddApacheIgniteCache(this IServiceCollection services, Action<IgniteDistributedCacheOptions> setupAction)
+        {
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(setupAction);
+
+            services.AddOptions();
+
+            services.Configure(setupAction);
+            services.Add(ServiceDescriptor.Singleton<IgniteDistributedCache, IgniteDistributedCache>());
+            services.Add(ServiceDescriptor.Singleton<IApacheIgniteDistributedCache, ApacheIgniteDistributedCache>());
 
             return services;
         }

@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using RedisForDummies.Api.Settings;
+using RedisForDummies.Application.Caches.Redis;
+using RedisForDummies.Infrastructure.Caches.Redis;
 
 namespace RedisForDummies.Api.Extensions
 {
@@ -13,9 +15,29 @@ namespace RedisForDummies.Api.Extensions
         /// </summary>
         /// <param name="services">Коллекция сервисов.</param>
         /// <param name="configuration">Конфигурация <see cref="IConfiguration"/>.</param>
-        private static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
+        /// <returns>Коллекция сервисов с добавленным Redis'ом.</returns>
+        public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddStackExchangeRedisCache(o => ConfigureRedis(o, configuration));
+            services.AddRedisCache(o => ConfigureRedis(o, configuration));
+
+            return services;
+        }
+
+        /// <summary>
+        /// Добавить Кэш, предоставляемый Redis'ом.
+        /// </summary>
+        /// <param name="services">Коллекция сервисов.</param>
+        /// <param name="setupAction">Действие для настройки Кэша.</param>
+        /// <returns>Коллекция сервисов с добавленным кэшем Redis'а.</returns>
+        private static IServiceCollection AddRedisCache(this IServiceCollection services, Action<RedisCacheOptions> setupAction)
+        {
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(setupAction);
+
+            services.AddOptions();
+
+            services.Configure(setupAction);
+            services.Add(ServiceDescriptor.Singleton<IRedisDistributedCache, RedisDistributedCache>());
 
             return services;
         }

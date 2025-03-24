@@ -7,7 +7,7 @@ namespace RedisForDummies.Api.Controllers
     /// Контроллер для работы со Счетчиками.
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class CounterController : ControllerBase
     {
         /// <summary>
@@ -21,16 +21,31 @@ namespace RedisForDummies.Api.Controllers
         }
 
         /// <summary>
-        /// Получить значение Счетчика.
+        /// Получить значение Счетчика из кэша Apache Ignite'а.
         /// </summary>
         /// <param name="counterKey">Ключ Счетчика.</param>
-        /// <returns>Значение Счетчика.</returns>
+        /// <returns>Значение Счетчика из кэша Apache Ignite'а.</returns>
         [HttpGet]
-        public async Task<int> GetAsync(string counterKey)
+        public async Task<int> GetFromApacheIgniteAsync(string counterKey)
         {
             int returnValue;
 
-            returnValue = await _counterService.GetAsync(counterKey);
+            returnValue = await _counterService.GetFromApacheIgniteAsync(counterKey);
+
+            return returnValue;
+        }
+
+        /// <summary>
+        /// Получить значение Счетчика из кэша Redis'а.
+        /// </summary>
+        /// <param name="counterKey">Ключ Счетчика.</param>
+        /// <returns>Значение Счетчика из кэша Redis'а.</returns>
+        [HttpGet]
+        public async Task<int> GetFromRedisAsync(string counterKey)
+        {
+            int returnValue;
+
+            returnValue = await _counterService.GetFromRedisAsync(counterKey);
 
             return returnValue;
         }
