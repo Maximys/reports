@@ -1,11 +1,4 @@
-﻿using System.Net.Mime;
-using System.Text;
-using Apache.Extensions.Caching.Ignite;
-using Apache.Ignite;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
-using RedisForDummies.Api.Settings;
-using RedisForDummies.Api.Settings.ApacheIgnite;
-using RedisForDummies.Application.Providers.Counters;
+﻿using RedisForDummies.Application.Providers.Counters;
 using RedisForDummies.Infrastructure.Providers.Counters;
 
 namespace RedisForDummies.Api.Extensions
@@ -13,7 +6,7 @@ namespace RedisForDummies.Api.Extensions
     /// <summary>
     /// Методы-расширения для <see cref="IServiceCollection"/>.
     /// </summary>
-    public static class ServiceCollectionExtensions
+    public static partial class ServiceCollectionExtensions
     {
         /// <summary>
         /// Добавить сервисы приложения.
@@ -39,80 +32,6 @@ namespace RedisForDummies.Api.Extensions
             services.AddTransient<ICounterService, CounterService>();
 
             return services;
-        }
-
-        /// <summary>
-        /// Добавить Apache Ignite.
-        /// </summary>
-        /// <param name="services">Коллекция сервисов.</param>
-        /// <param name="configuration">Конфигурация <see cref="IConfiguration"/>.</param>
-        private static IServiceCollection AddApacheIgnite(this IServiceCollection services, IConfiguration configuration)
-        {
-            ApacheIgniteSettings apacheIgniteSettings;
-
-            apacheIgniteSettings = configuration.GetRequiredSection(nameof(ApacheIgniteSettings))
-                .Get<ApacheIgniteSettings>()!;
-
-            services.AddIgniteClientGroup(new IgniteClientGroupConfiguration
-            {
-                ClientConfiguration = new IgniteClientConfiguration(apacheIgniteSettings.Endpoints)
-            })
-            .AddIgniteDistributedCache(options => options.CacheKeyPrefix = "prefix");
-
-            InitApacheIgniteCluster(apacheIgniteSettings);
-
-            return services;
-        }
-
-        /// <summary>
-        /// Добавить Redis.
-        /// </summary>
-        /// <param name="services">Коллекция сервисов.</param>
-        /// <param name="configuration">Конфигурация <see cref="IConfiguration"/>.</param>
-        private static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddStackExchangeRedisCache(o => ConfigureRedis(o, configuration));
-
-            return services;
-        }
-
-        /// <summary>
-        /// Настроить Redis.
-        /// </summary>
-        /// <param name="options">Настройки для Redis'а.</param>
-        /// <param name="configuration">Конфигурация <see cref="IConfiguration"/>.</param>
-        private static void ConfigureRedis(RedisCacheOptions options, IConfiguration configuration)
-        {
-            RedisSettings redisSettings;
-
-            redisSettings = configuration.GetSection(nameof(RedisSettings))
-                .Get<RedisSettings>();
-
-            options.Configuration = redisSettings.Configuration;
-            options.InstanceName = redisSettings.InstanceName;
-        }
-
-        /// <summary>
-        /// Инициализировать кластер Apache Ignite.
-        /// </summary>
-        /// <param name="apacheIgniteSettings">Настройки для работы с Apache Ignite.</param>
-        private static void InitApacheIgniteCluster(ApacheIgniteSettings apacheIgniteSettings)
-        {
-            using (HttpClient apacheIgniteClient = new HttpClient())
-            {
-                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Post, apacheIgniteSettings.Initialization.InitializationUri)
-                {
-                    Content = new StringContent(apacheIgniteSettings.Initialization.Body, Encoding.UTF8, MediaTypeNames.Application.Json)
-                };
-
-                using (HttpResponseMessage webResponse = apacheIgniteClient.Send(webRequest))
-                {
-                    if (!webResponse.IsSuccessStatusCode)
-                    {
-                        throw new InvalidOperationException("Не удалось инициализировать Apache Ignite");
-                    }
-                }
-            }
         }
     }
 }
