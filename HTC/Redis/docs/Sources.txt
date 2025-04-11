@@ -1,0 +1,4 @@
+https://architecturenotes.co/p/redis
+https://backendless.com/redis-what-it-is-what-it-does-and-why-you-should-care/
+https://learn.microsoft.com/en-us/visualstudio/containers/tutorial-multicontainer?view=vs-2022
+https://habr.com/ru/companies/spaceweb/articles/825030/
